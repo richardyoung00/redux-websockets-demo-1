@@ -1,0 +1,26 @@
+.app {
+  font-size: 30px;
+}
+
+.app input {
+  font-size: 30px;
+  margin: 10px;
+}
+
+
+.app button {
+  font-size: 30px;
+  margin: 10px;
+}
+
+.fileIcon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 30px;
+  padding-right: 10px;
+}
+
+.fileName {
+  display: inline-block;
+  vertical-align: middle;
+}
