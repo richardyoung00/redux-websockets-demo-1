@@ -7,18 +7,18 @@ const directoryWatcher = require('./directoryWatcher');
 
 const watchDir = 'C:/dev/redux-websockets/temp';
 
-io.on('connection', function (socket) {
+io.on('connection', (client) => {
   console.log('a user connected');
 
-  socket.emit('serverFileChange', {type: 'CLEAR_FILES'});
+  client.emit('serverFileChange', {type: 'CLEAR_FILES'});
 
-  fs.readdir(watchDir, function (err, items) {
+  fs.readdir(watchDir, (err, items) => {
     items.map((item) => {
-      socket.emit('serverFileChange', {type: 'SERVER_FILE_ADDED', name: item});
+      client.emit('serverFileChange', {type: 'SERVER_FILE_ADDED', name: item});
     });
   });
 
-  socket.on('fileActions', (action) => {
+  client.on('fileActions', (action) => {
     if (action.type === 'CREATE_FILE') {
       fs.openSync(watchDir + '/' + action.filename, 'w');
     }
@@ -31,7 +31,7 @@ directoryWatcher.watch(watchDir, (changeType, fullPath) => {
 });
 
 
-http.listen(3001, function () {
+http.listen(3001, () => {
   console.log('listening on *:3001');
 });
 

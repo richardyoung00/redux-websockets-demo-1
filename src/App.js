@@ -20,8 +20,8 @@ class App extends Component {
 
   renderFileItem(item) {
     return (
-    <div >
-      <img className="fileIcon" src={fileIcon}/>
+    <div key={item}>
+      <img className="fileIcon" alt="icon" src={fileIcon}/>
       <div className="fileName">{item}</div>
     </div>
 
