@@ -2,17 +2,18 @@ const app = require('express')();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const fsWrapper = require('./fsWrapper');
+const actions = require('./src/actions/files');
 
 // send action to clear all files
 let clearAllFiles = (client) => {
-  client.emit('fileActions', {type: 'CLEAR_FILES'});
+  client.emit('fileActions', actions.clearFilesAction());
 };
 
 // iterate through all existing files and send action to add each one to client
 let sendUpdatedListOfFiles = (client) => {
-  fsWrapper.readDirectory((items) => {
-    items.map((item) => {
-      client.emit('fileActions', {type: 'SERVER_FILE_ADDED', name: item});
+  fsWrapper.readDirectory((files) => {
+    files.map((file) => {
+      client.emit('fileActions', actions.fileCreatedAction(file));
     });
   });
 };

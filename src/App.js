@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import { connect } from 'react-redux';
-import { createFileAction } from './actions/index';
+import { createFileAction } from './actions/files';
 import fileIcon from './images/file-icon.png' ;
 
 class App extends Component {
@@ -10,14 +10,17 @@ class App extends Component {
     this.state = {};
   }
 
+  // handle change
   handleChange = (e) => {
     this.setState({input: e.target.value});
   };
 
+  // handle click
   handleClick = () => {
     this.props.createFile(this.state.input);
   };
 
+  // render file item
   renderFileItem(item) {
     return (
     <div key={item}>
@@ -30,10 +33,12 @@ class App extends Component {
   render() {
     return (
       <div className="app">
+        {/* render input box to create file */}
         <div>
           <input type="text" onChange={ this.handleChange }/>
           <button onClick={this.handleClick}>Create file</button>
         </div>
+        {/* render list of files */}
         <div>
           {this.props.fileList.map((item) => this.renderFileItem(item))}
         </div>
@@ -42,12 +47,14 @@ class App extends Component {
   }
 }
 
+// map state to props
 const mapStateToProps = (state) => {
   return {
     fileList: state.files.fileList,
   }
 };
 
+// map dispatch to props
 const mapDispatchToProps = (dispatch) => {
   return {
     createFile: (filename) => {
@@ -56,6 +63,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
+// connect app to redux
 App = connect(
   mapStateToProps,
   mapDispatchToProps
