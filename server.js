@@ -34,7 +34,14 @@ io.on('connection', (client) => {
 
 // watch the directory for changes and send action via WS
 fsWrapper.watch((changeType, filename) => {
-  io.emit('fileActions', {type: changeType, filename})
+  switch (changeType) {
+    case 'create':
+      io.emit('fileActions', actions.fileCreatedAction(filename));
+      break;
+    case 'remove':
+      io.emit('fileActions', actions.fileRemovedAction(filename));
+      break;
+  }
 });
 
 http.listen(3001, () => {
