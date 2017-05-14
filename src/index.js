@@ -1,30 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import io from 'socket.io-client';
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 
 import App from './App';
 import './index.css';
-import fileChanges from './reducers/fileChanges'
-import { socketMiddleware } from './middleware';
+import files from './reducers/files'
 
-const reducers = combineReducers({
-  fileChanges,
-});
+// import socket middleware
+import { socketMiddleware } from './middleware/socket';
+
+// import and initialise socket io client
+import io from 'socket.io-client';
 
 const socket = io();
 
-socket.on('connect', () => console.log("Connected to server"));
-socket.on('disconnect', () => console.log("Disconnected from server"));
+const reducers = combineReducers({ files });
 
 let store = createStore(
   reducers,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  // inject socket middleware into the store
   applyMiddleware(socketMiddleware(socket))
 );
 
-socket.on('serverFileChange', (data) => {
+// listen for WS events from the server, and dispatch them directly to the redux store
+socket.on('fileActions', (data) => {
   store.dispatch(data)
 });
 

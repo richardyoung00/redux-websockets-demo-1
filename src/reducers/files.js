@@ -3,7 +3,7 @@ const initialState = {
   fileList: []
 };
 
-const fileChanges = (state = initialState, action) => {
+const files = (state = initialState, action) => {
 
   switch (action.type) {
     case 'SERVER_FILE_ADDED':
@@ -32,4 +32,4 @@ function removeItem(array, name) {
   return array.filter( (item, index) => item !== name);
 }
 
-export default fileChanges
+export default files

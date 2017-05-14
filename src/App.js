@@ -24,7 +24,6 @@ class App extends Component {
       <img className="fileIcon" alt="icon" src={fileIcon}/>
       <div className="fileName">{item}</div>
     </div>
-
     );
   }
 
@@ -45,7 +44,7 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    fileList: state.fileChanges.fileList,
+    fileList: state.files.fileList,
   }
 };
 

@@ -1,35 +1,40 @@
 const app = require('express')();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const fs = require('fs');
+const fsWrapper = require('./fsWrapper');
 
-const directoryWatcher = require('./directoryWatcher');
+// send action to clear all files
+let clearAllFiles = (client) => {
+  client.emit('fileActions', {type: 'CLEAR_FILES'});
+};
 
-const watchDir = 'C:/dev/redux-websockets/temp';
-
-io.on('connection', (client) => {
-  console.log('a user connected');
-
-  client.emit('serverFileChange', {type: 'CLEAR_FILES'});
-
-  fs.readdir(watchDir, (err, items) => {
+// iterate through all existing files and send action to add each one to client
+let sendUpdatedListOfFiles = (client) => {
+  fsWrapper.readDirectory((items) => {
     items.map((item) => {
-      client.emit('serverFileChange', {type: 'SERVER_FILE_ADDED', name: item});
+      client.emit('fileActions', {type: 'SERVER_FILE_ADDED', name: item});
     });
   });
+};
 
+// listen for new connections
+io.on('connection', (client) => {
+  // send clear files and send updated list
+  clearAllFiles(client);
+  sendUpdatedListOfFiles(client);
+
+  // listen for actions from the client
   client.on('fileActions', (action) => {
     if (action.type === 'CREATE_FILE') {
-      fs.openSync(watchDir + '/' + action.filename, 'w');
+      fsWrapper.createNewFile(action.filename);
     }
   })
-
 });
 
-directoryWatcher.watch(watchDir, (changeType, fullPath) => {
-  io.emit('serverFileChange', {type: changeType, name: fullPath})
+// watch the directory for changes and send action via WS
+fsWrapper.watch((changeType, fullPath) => {
+  io.emit('fileActions', {type: changeType, name: fullPath})
 });
-
 
 http.listen(3001, () => {
   console.log('listening on *:3001');
