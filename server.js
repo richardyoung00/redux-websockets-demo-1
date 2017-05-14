@@ -33,8 +33,8 @@ io.on('connection', (client) => {
 });
 
 // watch the directory for changes and send action via WS
-fsWrapper.watch((changeType, fullPath) => {
-  io.emit('fileActions', {type: changeType, name: fullPath})
+fsWrapper.watch((changeType, filename) => {
+  io.emit('fileActions', {type: changeType, filename})
 });
 
 http.listen(3001, () => {

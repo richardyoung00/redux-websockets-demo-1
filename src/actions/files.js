@@ -8,7 +8,7 @@ exports.createFileAction = (filename) => {
 exports.fileCreatedAction = (filename) => {
   return {
     type: 'SERVER_FILE_ADDED',
-    name: filename}
+    filename}
 };
 
 exports.clearFilesAction = () => {

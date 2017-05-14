@@ -8,7 +8,7 @@ const files = (state = initialState, action) => {
   switch (action.type) {
     case 'SERVER_FILE_ADDED':
       const addList = state.fileList.slice();
-      addList.push(action.name);
+      addList.push(action.filename);
       return {
         ...state,
         fileList: addList
@@ -16,7 +16,7 @@ const files = (state = initialState, action) => {
     case 'SERVER_FILE_REMOVED':
       return {
         ...state,
-        fileList: removeItem(state.fileList, action.name)
+        fileList: removeItem(state.fileList, action.filename)
       };
     case 'CLEAR_FILES':
       return {
